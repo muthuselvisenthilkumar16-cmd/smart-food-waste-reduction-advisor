@@ -13,6 +13,14 @@ from langchain_core.prompts import ChatPromptTemplate
 
 load_dotenv()
 
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+if not GROQ_API_KEY:
+    raise ValueError(
+        "GROQ_API_KEY is not configured. "
+        "Add it to your .env file locally or Streamlit Secrets when deployed."
+    )
+
 
 # ============================================================
 # CONNECT LANGCHAIN TO GROQ
@@ -20,7 +28,8 @@ load_dotenv()
 
 llm = ChatGroq(
     model="openai/gpt-oss-20b",
-    temperature=0
+    temperature=0,
+    groq_api_key=GROQ_API_KEY
 )
 
 
@@ -116,12 +125,12 @@ def extract_food_information(user_input):
 
     content = response.content
 
-    # Handle possible Markdown code fences from the model
+    # Handle Markdown code fences
     content = content.replace("```json", "")
     content = content.replace("```", "")
     content = content.strip()
 
-    # Extract the JSON object if extra text accidentally appears
+    # Extract JSON object if extra text appears
     match = re.search(
         r"\{.*\}",
         content,
@@ -209,8 +218,6 @@ advice_prompt = ChatPromptTemplate.from_messages([
 You are a food waste reduction advisor.
 
 Give a short, practical and easy-to-understand recommendation.
-
-Use the food type and fuzzy risk assessment provided.
 
 Your response should contain:
 
