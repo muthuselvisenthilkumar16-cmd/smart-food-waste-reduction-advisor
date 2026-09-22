@@ -1,0 +1,7 @@
+streamlit
+scikit-fuzzy
+scipy
+networkx
+langchain
+langchain-groq
+python-dotenv
