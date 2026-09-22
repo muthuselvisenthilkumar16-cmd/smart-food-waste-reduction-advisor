@@ -5,3 +5,4 @@ networkx
 langchain
 langchain-groq
 python-dotenv
+matplotlib
